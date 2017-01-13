@@ -1,0 +1,475 @@
+<!-- START SIGMA IMPORTS -->
+<script src="../src/sigma.core.js"></script>
+<script src="../src/conrad.js"></script>
+<script src="../src/utils/sigma.utils.js"></script>
+<script src="../src/utils/sigma.polyfills.js"></script>
+<script src="../src/sigma.settings.js"></script>
+<script src="../src/classes/sigma.classes.dispatcher.js"></script>
+<script src="../src/classes/sigma.classes.configurable.js"></script>
+<script src="../src/classes/sigma.classes.graph.js"></script>
+<script src="../src/classes/sigma.classes.camera.js"></script>
+<script src="../src/classes/sigma.classes.quad.js"></script>
+<script src="../src/captors/sigma.captors.mouse.js"></script>
+<script src="../src/captors/sigma.captors.touch.js"></script>
+<script src="../src/renderers/sigma.renderers.canvas.js"></script>
+<script src="../src/renderers/sigma.renderers.webgl.js"></script>
+<script src="../src/renderers/sigma.renderers.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.nodes.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.nodes.fast.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.def.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.fast.js"></script>
+<script src="../src/renderers/webgl/sigma.webgl.edges.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.labels.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.hovers.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.nodes.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.def.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.arrow.js"></script>
+<script src="../src/renderers/canvas/sigma.canvas.edges.curve.js"></script>
+<script src="../src/middlewares/sigma.middlewares.rescale.js"></script>
+<script src="../src/middlewares/sigma.middlewares.copy.js"></script>
+<script src="../src/misc/sigma.misc.animation.js"></script>
+<script src="../src/misc/sigma.misc.bindEvents.js"></script>
+<script src="../src/misc/sigma.misc.drawHovers.js"></script>
+<!-- END SIGMA IMPORTS -->
+<div id="container">
+  <style>
+    #graph-container {
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      position: absolute;
+    }
+  </style>
+  <div id="graph-container"></div>
+</div>
+<script>
+/**
+ * This is a basic example on how to instanciate sigma. A random graph is
+ * generated and stored in the "graph" variable, and then sigma is
+ * instanciated directly with the graph.
+ *
+ * The simple instanciation of sigma is enough to make it render the graph
+ * on the screen, since the graph is given directly to the constructor.
+ */
+var i,
+    s,
+    N = 100,
+    E = 500,
+    g = {
+      nodes: [],
+      edges: []
+    };
+
+// Generate a random graph:
+colors = [
+  '#617db4',
+  '#668f3c',
+  '#c6583e',
+  '#b956af'
+];
+g.nodes.push({
+  id: 'java',
+  label: 'java',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+g.nodes.push({
+  id: 'python',
+  label: 'python',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+g.nodes.push({
+  id: 'javascript',
+  label: 'javascript',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+g.nodes.push({
+  id: 'html',
+  label: 'html',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+g.nodes.push({
+  id: 'css',
+  label: 'css',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+g.nodes.push({
+  id: 'c',
+  label: 'c',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+g.nodes.push({
+  id: 'c++',
+  label: 'c++',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+
+g.nodes.push({
+  id: 'nodejs',
+  label: 'nodejs',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'ruby',
+  label: 'ruby',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+g.nodes.push({
+  id: 'mongodb',
+  label: 'mongodb',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'postgresql',
+  label: 'postgresql',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'lucene',
+  label: 'lucene',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'hbase',
+  label: 'hbase',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'hadoop',
+  label: 'hadoop',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'swift',
+  label: 'swift',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'openlayers',
+  label: 'openlayers',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'openstack',
+  label: 'openstack',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'kvm',
+  label: 'kvm',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'restlet',
+  label: 'restlet',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'mybatis',
+  label: 'mybatis',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: colors[Math.floor(Math.random() * colors.length)]
+});
+g.nodes.push({
+  id: 'objc',
+  label: 'objc',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+
+g.nodes.push({
+  id: 'apple-swift',
+  label: 'apple-swift',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+
+g.nodes.push({
+  id: 'ios',
+  label: 'ios',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+
+g.nodes.push({
+  id: 'windows',
+  label: 'windows',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+
+g.nodes.push({
+  id: 'c#',
+  label: 'c#',
+  x: Math.random(),
+  y: Math.random(),
+  size: 15,
+  color: '#ccc'
+});
+
+
+g.edges.push({
+  id: 'e1',
+  source: 'lucene',
+  target: 'java',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'e2',
+  source: 'hbase',
+  target: 'java',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'e3',
+  source: 'hadoop',
+  target: 'java',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'e4',
+  source: 'restlet',
+  target: 'java',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'e5',
+  source: 'mybatis',
+  target: 'java',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'e75',
+  source: 'c++',
+  target: 'java',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p1',
+  source: 'swift',
+  target: 'python',
+  size: Math.random(),
+  color: '#ccc'
+});
+
+g.edges.push({
+  id: 'p2',
+  source: 'openstack',
+  target: 'python',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p3',
+  source: 'python',
+  target: 'c',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p4',
+  source: 'python',
+  target: 'c++',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p5',
+  source: 'python',
+  target: 'javascript',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p6',
+  source: 'python',
+  target: 'css',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p7',
+  source: 'python',
+  target: 'html',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p8',
+  source: 'java',
+  target: 'html',
+  size: Math.random(),
+  color: '#ccc'
+});
+
+g.edges.push({
+  id: 'p10',
+  source: 'mongodb',
+  target: 'python',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p11',
+  source: 'postgresql',
+  target: 'python',
+  size: Math.random(),
+  color: '#ccc'
+});
+
+g.edges.push({
+  id: 'p12',
+  source: 'openlayers',
+  target: 'javascript',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p13',
+  source: 'nodejs',
+  target: 'javascript',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p14',
+  source: 'ruby',
+  target: 'javascript',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p15',
+  source: 'ruby',
+  target: 'html',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p16',
+  source: 'ruby',
+  target: 'css',
+  size: Math.random(),
+  color: '#ccc'
+});
+g.edges.push({
+  id: 'p17',
+  source: 'kvm',
+  target: 'c',
+  size: Math.random(),
+  color: '#ccc'
+});
+
+g.edges.push({
+  id: 'p18',
+  source: 'windows',
+  target: 'c++',
+  size: Math.random(),
+  color: '#ccc'
+});
+
+g.edges.push({
+  id: 'p19',
+  source: 'windows',
+  target: 'c#',
+  size: Math.random(),
+  color: '#ccc'
+});
+
+g.edges.push({
+  id: 'p20',
+  source: 'apple-swift',
+  target: 'ios',
+  size: Math.random(),
+  color: '#ccc'
+});
+
+g.edges.push({
+  id: 'p21',
+  source: 'objc',
+  target: 'ios',
+  size: Math.random(),
+  color: '#ccc'
+});
+
+// Instanciate sigma:
+s = new sigma({
+  graph: g,
+  container: 'graph-container'
+});
+</script>
+
+
